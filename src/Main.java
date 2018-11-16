@@ -5,6 +5,7 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -24,18 +25,23 @@ public class Main extends Application {
 
         ColourPalette startPalette = new ColourPalette(3);
 
-        Rectangle firstColour = new Rectangle(50, 50, 50, 50);
+        Rectangle firstColour = new Rectangle(100, 50, 50, 50);
         firstColour.setStroke(Color.BLACK);
 
-        Rectangle secondColour = new Rectangle(150, 50, 50, 50);
+        ColorPicker firstPicker = new ColorPicker();
+        firstPicker.setLayoutX(150);
+        firstPicker.setLayoutY(160);
+
+        Rectangle secondColour = new Rectangle(200, 50, 50, 50);
         secondColour.setStroke(Color.BLACK);
 
-        Rectangle thirdColour = new Rectangle(250, 50, 50, 50);
+        Rectangle thirdColour = new Rectangle(300, 50, 50, 50);
         thirdColour.setStroke(Color.BLACK);
 
         root.getChildren().add(firstColour);
         root.getChildren().add(secondColour);
         root.getChildren().add(thirdColour);
+        root.getChildren().add(firstPicker);
 
 
         // error text
@@ -48,42 +54,19 @@ public class Main extends Application {
 
         //Adding a colour interface
 
-        TextField colourRed = new TextField();
-        colourRed.setLayoutX(150);
-        colourRed.setLayoutY(120);
+        Text buttonHeader = new Text("Pick a color");
+        buttonHeader.setLayoutX(150);
+        buttonHeader.setLayoutY(140);
 
-        Label forRed = new Label("Enter red value");
-        forRed.setLayoutX(50);
-        forRed.setLayoutY(120);
 
-        TextField colourGreen = new TextField();
-        colourGreen.setLayoutX(150);
-        colourGreen.setLayoutY(150);
-
-        Label forGreen = new Label("Enter green value");
-        forGreen.setLayoutX(50);
-        forGreen.setLayoutY(150);
-
-        TextField colourBlue = new TextField();
-        colourBlue.setLayoutX(150);
-        colourBlue.setLayoutY(180);
-
-        Label forBlue = new Label("Enter blue value");
-        forBlue.setLayoutX(50);
-        forBlue.setLayoutY(180);
 
         Button addColorbtn = new Button("Add a color");
-        addColorbtn.setLayoutX(50);
-        addColorbtn.setLayoutY(250);
+        addColorbtn.setLayoutX(150);
+        addColorbtn.setLayoutY(200);
 
-        //adding to root
-        root.getChildren().add(colourRed);
-        root.getChildren().add(colourGreen);
-        root.getChildren().add(colourBlue);
+
         root.getChildren().add(addColorbtn);
-        root.getChildren().add(forRed);
-        root.getChildren().add(forGreen);
-        root.getChildren().add(forBlue);
+       root.getChildren().add(buttonHeader);
 
 
         EventHandler<MouseEvent> eventAddColor = new EventHandler<MouseEvent>() {
@@ -91,10 +74,17 @@ public class Main extends Application {
             public void handle(MouseEvent event) {
                 int numberOfColours = startPalette.getSizeOfPalette();
                 try {
-                    startPalette.add(new Colour(Integer.parseInt(colourRed.getText()), Integer.parseInt(colourGreen.getText()), Integer.parseInt(colourBlue.getText())));
-                    colourRed.clear();
-                    colourGreen.clear();
-                    colourBlue.clear();
+                  //  startPalette.add(new Colour(Integer.parseInt(colourRed.getText()), Integer.parseInt(colourGreen.getText()), Integer.parseInt(colourBlue.getText())));
+                    String hex2 = "#" + Integer.toHexString(firstPicker.getValue().hashCode());
+
+
+
+                    int redInt = Integer.valueOf( hex2.substring( 1, 3 ), 16 );
+
+                    int greenInt = Integer.valueOf( hex2.substring( 3, 5 ), 16 );
+                    int blueInt = Integer.valueOf( hex2.substring( 5, 7 ), 16 );
+                    startPalette.add(new Colour(redInt, greenInt,blueInt));
+
 
                     if (numberOfColours == 0) {
                         Colour one = startPalette.get(0);
@@ -113,9 +103,7 @@ public class Main extends Application {
                     error.setText("");
 
                 } catch (Exception e) {
-                    colourRed.clear();
-                    colourGreen.clear();
-                    colourBlue.clear();
+
                     error.setText("Error: Could not add the color");
                 }
             }
@@ -126,40 +114,31 @@ public class Main extends Application {
         //Mixing two colours
 
         Text boxToMix = new Text(55, 335, "Box to mix");
-        Text redValue = new Text(355, 315, "Red Value");
-        Text greenValue = new Text(355, 365, "Green Value");
-        Text blueValue = new Text(355, 415, "Blue Value");
+       ColorPicker mixPicker = new ColorPicker();
+       mixPicker.setLayoutX(250);
+       mixPicker.setLayoutY(350);
+
+        Text mixWith = new Text(250, 335, "Pick a color to mix with");
 
         root.getChildren().add(boxToMix);
-        root.getChildren().add(redValue);
-        root.getChildren().add(greenValue);
-        root.getChildren().add(blueValue);
+        root.getChildren().add(mixPicker);
+        root.getChildren().add(mixWith);
+
 
         //textfield for the userinput
 
-        TextField colourToGetMixed = new TextField("box to mix");
+        TextField colourToGetMixed = new TextField("enter number");
         colourToGetMixed.setLayoutX(50);
         colourToGetMixed.setLayoutY(350);
 
-        TextField mixedRed = new TextField("Red value");
-        mixedRed.setLayoutX(200);
-        mixedRed.setLayoutY(300);
 
-        TextField mixedGreen = new TextField("Green value");
-        mixedGreen.setLayoutX(200);
-        mixedGreen.setLayoutY(350);
 
-        TextField mixedBlue = new TextField("Blue value");
-        mixedBlue.setLayoutX(200);
-        mixedBlue.setLayoutY(400);
 
         Button mixColourbtn = new Button("mix colours");
-        mixColourbtn.setLayoutX(50);
+        mixColourbtn.setLayoutX(175);
         mixColourbtn.setLayoutY(400);
 
-        root.getChildren().add(mixedBlue);
-        root.getChildren().add(mixedGreen);
-        root.getChildren().add(mixedRed);
+
         root.getChildren().add(colourToGetMixed);
         root.getChildren().add(mixColourbtn);
 
@@ -169,13 +148,17 @@ public class Main extends Application {
             @Override
             public void handle(MouseEvent event) {
                 Colour colour1 = new Colour(0, 0, 0);
+                Rectangle mixStart = new Rectangle();
                 try {
                     if (Integer.parseInt(colourToGetMixed.getText()) == 1) {
                         colour1 = startPalette.get(0);
+                        mixStart = firstColour;
                     } else if (Integer.parseInt(colourToGetMixed.getText()) == 2) {
                         colour1 = startPalette.get(1);
+                        mixStart = secondColour;
                     } else if (Integer.parseInt(colourToGetMixed.getText()) == 3) {
                         colour1 = startPalette.get(2);
+                        mixStart = thirdColour;
                     }
 
                     error.setText("");
@@ -184,9 +167,14 @@ public class Main extends Application {
                 }
 
                 try {
-                    Colour colour2 = new Colour(Integer.parseInt(mixedRed.getText()), Integer.parseInt(mixedGreen.getText()), Integer.parseInt(mixedBlue.getText()));
+                    String hex2 = "#" + Integer.toHexString(mixPicker.getValue().hashCode());
+                    int redInt = Integer.valueOf( hex2.substring( 1, 3 ), 16 );
+                    int greenInt = Integer.valueOf( hex2.substring( 3, 5 ), 16 );
+                    int blueInt = Integer.valueOf( hex2.substring( 5, 7 ), 16 );
+
+                    Colour colour2 = new Colour(redInt, greenInt,blueInt);
                     colour1.mixWith(colour2);
-                    firstColour.setFill(Color.rgb(colour1.getRed(), colour1.getGreen(), colour1.getBlue()));
+                    mixStart.setFill(Color.rgb(colour1.getRed(), colour1.getGreen(), colour1.getBlue()));
                     error.setText("");
                 } catch (Exception e) {
                     error.setText("Error: Colour 2 contains something off");
